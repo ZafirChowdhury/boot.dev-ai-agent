@@ -7,8 +7,6 @@ def write_file(working_directory, file_path, content):
     if not abs_file_path.startswith(abs_working_dir):
         return f'Error: Cannot write to "{file_path}" as it is outside the permitted working directory'
 
-    
-    # calculator/pkg/morelorem.txt
     dir_path = "/".join(abs_file_path.split("/")[:-1])
     try:
         if not os.path.exists(dir_path):
