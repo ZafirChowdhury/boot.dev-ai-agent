@@ -11,10 +11,16 @@ from functions.get_file_content import schema_get_file_content
 from functions.write_file import schema_write_file
 from functions.run_python_file import schema_run_python_file
 
+from functions.call_function import call_function
+
 def main(): 
     if (len(sys.argv) < 2):
         print(f"Usage: python3 main.py <prompt> [--verbose]")
         sys.exit(1)
+
+    verbose = False
+    if len(sys.argv) > 2 and sys.argv[2] == "--verbose":
+        verbose = True
 
     load_dotenv() # find .env file and sets the key for the current session
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -64,14 +70,18 @@ def main():
 
     if response.function_calls:
         for function_call_part in response.function_calls:
-            print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+            function_call_result = call_function(function_call_part, verbose)
 
+            if not function_call_result.parts[0]:
+                raise Exception("Fatal exception: Unexpected fuction call return")
     else:
         print(response.text)
-
-    if len(sys.argv) > 2 and sys.argv[2] == "--verbose":
+    
+    if verbose:
         print(f"User prompt: {user_prompt}")
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+        print(f"-> {function_call_result.parts[0].function_response.response}")
 
 main()
