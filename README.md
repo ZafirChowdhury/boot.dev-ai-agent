@@ -6,6 +6,3 @@ Do not run this program on your local machine! It does not have all the security
 
 Things I learned from this 
 - 
-
-TODO
-- Replace all custom path code with stlib code so it works with other os and envs.
