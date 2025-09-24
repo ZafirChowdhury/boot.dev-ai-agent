@@ -62,9 +62,12 @@ def main():
                                            tools=[available_functions])
     )
 
-    #print(f"Calling function: {response.function_calls.name}({response.function_calls.args})")
-    print("Fuction call: ", response.function_calls)
-    print(response.text)
+    if response.function_calls:
+        for function_call_part in response.function_calls:
+            print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+
+    else:
+        print(response.text)
 
     if len(sys.argv) > 2 and sys.argv[2] == "--verbose":
         print(f"User prompt: {user_prompt}")
