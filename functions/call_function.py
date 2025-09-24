@@ -31,12 +31,14 @@ def call_function(function_call_part, verbose=False):
             ],
         )
     
+    result = func(working_directory="./calculator", **function_call_part.args)
+
     return types.Content(
         role="tool",
         parts=[
             types.Part.from_function_response(
                 name=function_call_part.name,
-                response={"result": function_call_part.name},
+                response={"result": result},
             )
         ],
     )

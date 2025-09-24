@@ -25,8 +25,8 @@ def run_python_file(working_directory, file_path, args=[]):
         
         if not completed_process.stdout and not completed_process.stderr:
             return "No output produced."
-        
-        return f"STDOUT: {completed_process.stdout} \nSTDERR: {completed_process.stderr}"
+            
+        return f"STDOUT: {completed_process.stdout}, STDERR: {completed_process.stderr}"
 
     except Exception as error:
         return f"Error: executing Python file: {error}"
