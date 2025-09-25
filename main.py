@@ -61,27 +61,40 @@ def main():
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-001", 
-        contents=messages, 
-        config=types.GenerateContentConfig(system_instruction=system_prompt, 
-                                           tools=[available_functions])
-    )
+    try:
+        
+        for _ in range(20):
+            response = client.models.generate_content(
+                model="gemini-2.0-flash-001", 
+                contents=messages, 
+                config=types.GenerateContentConfig(system_instruction=system_prompt, 
+                                                tools=[available_functions])
+            )
 
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            function_call_result = call_function(function_call_part, verbose)
+            #if response.text:
+            #    print(response.text)
+            #    return
+            
+            if response.function_calls:
+                for function_call_part in response.function_calls:
+                    function_call_result = call_function(function_call_part, verbose)
 
-            if not function_call_result.parts[0]:
-                raise Exception("Fatal exception: Unexpected fuction call return")
-    else:
-        print(response.text)
-    
-    if verbose:
-        print(f"User prompt: {user_prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+                    function_call_result.role = "user"
+                    messages.append(function_call_result)
 
-        print(f"-> {function_call_result.parts[0].function_response.response}")
+                    if not function_call_result.parts[0]:
+                        raise Exception("Fatal exception: Unexpected fuction call return")
+            else:
+                print(response.text)
+            
+            if verbose:
+                print(f"User prompt: {user_prompt}")
+                print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+                print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+                print(f"-> {function_call_result.parts[0].function_response.response}")
+
+    except Exception as error:
+        print(error)
 
 main()
