@@ -5,4 +5,8 @@ Guided project from [Boot.dev](https://www.boot.dev/courses/build-ai-agent-pytho
 Do not run this program on your local machine! It does not have all the security and safety features that a production AI agent would have. It is for learning purposes only.
 
 Things I learned from this 
-- 
+- Working with files, directorys.
+- Running other program using pythons subprocess
+- args, stout, sterr
+- Working with extarnal api (IE google gemenie api)
+- TDD
